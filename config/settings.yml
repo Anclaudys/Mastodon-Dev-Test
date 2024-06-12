@@ -16,7 +16,7 @@ defaults: &defaults
   show_staff_badge: true
   preview_sensitive_media: false
   noindex: false
-  theme: 'default'
+  theme: 'mastodon-light'
   trends: true
   trends_as_landing_page: true
   trendable_by_default: false
@@ -32,6 +32,7 @@ defaults: &defaults
   disallowed_hashtags: # space separated string or list of hashtags without the hash
   bootstrap_timeline_accounts: ''
   activity_api_enabled: true
+  profile_directory: true
   peers_api_enabled: true
   show_domain_blocks: 'disabled'
   show_domain_blocks_rationale: 'disabled'
