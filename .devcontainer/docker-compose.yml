@@ -14,7 +14,7 @@ services:
       - /etc/letsencrypt/live/trustyantler.truanon.com/privkey.pem:/etc/ssl/private/privkey.pem
     working_dir: /app
     env_file:
-      - ../.env.development
+      - ../.env.production
 
     environment:
       RAILS_ENV: development

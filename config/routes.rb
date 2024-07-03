@@ -16,6 +16,11 @@ def redirect_with_vary(path)
 end
 
 Rails.application.routes.draw do
+  namespace :admin do
+    namespace :settings do
+      resources :api_keys, only: [:index, :create, :update, :destroy]
+    end
+  end
   # Paths of routes on the web app that to not require to be indexed or
   # have alternative format representations requiring separate controllers
   web_app_paths = %w(

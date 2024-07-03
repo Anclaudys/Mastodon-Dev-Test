@@ -1,0 +1,33 @@
+dmin@ip-172-31-45-223:~/Mastodon-Dev-Test$ rails generate controller admin/settings/api_keys index create update destroy
+DEPRECATION WARNING: Support for `config.active_support.cache_format_version = 6.1` has been deprecated and will be removed in Rails 7.2.
+
+Check the Rails upgrade guide at https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-activesupport-cache-serialization-format
+for more information on how to upgrade.
+ (called from <main> at /home/admin/Mastodon-Dev-Test/config/environment.rb:7)
+      create  app/controllers/admin/settings/api_keys_controller.rb
+       route  namespace :admin do       
+                namespace :settings do  
+                  get 'api_keys/index'  
+                  get 'api_keys/create' 
+                  get 'api_keys/update' 
+                  get 'api_keys/destroy'
+                end
+              end
+      invoke  haml
+      create    app/views/admin/settings/api_keys
+      create    app/views/admin/settings/api_keys/index.html.haml  
+      create    app/views/admin/settings/api_keys/create.html.haml 
+      create    app/views/admin/settings/api_keys/update.html.haml 
+      create    app/views/admin/settings/api_keys/destroy.html.haml
+      invoke  rspec
+      create    spec/requests/admin/settings/api_keys_spec.rb
+      create    spec/views/admin/settings/api_keys
+      create    spec/views/admin/settings/api_keys/index.html.haml_spec.rb
+      create    spec/views/admin/settings/api_keys/create.html.haml_spec.rb
+      create    spec/views/admin/settings/api_keys/update.html.haml_spec.rb
+      create    spec/views/admin/settings/api_keys/destroy.html.haml_spec.rb
+      invoke  helper
+      create    app/helpers/admin/settings/api_keys_helper.rb       
+      invoke    rspec
+      create      spec/helpers/admin/settings/api_keys_helper_spec.rb
+Coverage report generated for RSpec to /home/admin/Mastodon-Dev-Test/coverage. 0 / 41580 LOC (0.0%) covered.
