@@ -21,8 +21,7 @@ Rails.application.routes.draw do
       resources :api_keys, only: [:index, :create, :update, :destroy]
     end
   end
-  # Paths of routes on the web app that to not require to be indexed or
-  # have alternative format representations requiring separate controllers
+
   web_app_paths = %w(
     /getting-started
     /keyboard-shortcuts
@@ -52,19 +51,14 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  # config/routes.rb for verified ID
   get '/admin/verified_identity', to: 'admin/verified_identity#index'
   get '/api/truanon_profile/:id', to: 'truanon#profile'
-
-  # config/routes.rb
 
   namespace :settings do
     resource :verification, only: [:show, :update]
   end
-  
-  get '/verification', to: redirect('/settings/verification')
 
-  # mount LetterOpenerWeb::Engine, at: 'letter_opener' if Rails.env.development?
+  get '/verification', to: redirect('/settings/verification')
 
   get 'health', to: 'health#show'
 
@@ -121,12 +115,10 @@ Rails.application.routes.draw do
     confirmations: 'auth/confirmations',
   }
 
-  # rubocop:disable Style/FormatStringToken - those do not go through the usual formatting functions and are not safe to correct
   get '/users/:username', to: redirect_with_vary('/@%{username}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
   get '/users/:username/following', to: redirect_with_vary('/@%{username}/following'), constraints: lambda { |req| req.format.nil? || req.format.html? }
   get '/users/:username/followers', to: redirect_with_vary('/@%{username}/followers'), constraints: lambda { |req| req.format.nil? || req.format.html? }
   get '/users/:username/statuses/:id', to: redirect_with_vary('/@%{username}/%{id}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
-  # rubocop:enable Style/FormatStringToken
 
   get '/authorize_follow', to: redirect { |_, request| "/authorize_interaction?#{request.params.to_query}" }
 
@@ -183,7 +175,7 @@ Rails.application.routes.draw do
     get :player
   end
 
-  resources :tags,   only: [:show]
+  resources :tags, only: [:show]
   resources :emojis, only: [:show]
   resources :invites, only: [:index, :create, :destroy]
   resources :filters, except: [:show] do
@@ -214,11 +206,11 @@ Rails.application.routes.draw do
   end
 
   get '/web/(*any)', to: redirect('/%{any}', status: 302), as: :web, defaults: { any: '' }, format: false
-  get '/about',      to: 'about#show'
+  get '/about', to: 'about#show'
   get '/about/more', to: redirect('/about')
 
   get '/privacy-policy', to: 'privacy#show', as: :privacy_policy
-  get '/terms',          to: redirect('/privacy-policy')
+  get '/terms', to: redirect('/privacy-policy')
 
   match '/', via: [:post, :put, :patch, :delete], to: 'application#raise_not_found', format: false
   match '*unmatched_route', via: :all, to: 'application#raise_not_found', format: false

@@ -56,6 +56,10 @@ namespace :admin do
     resource :about, only: [:show, :update], controller: 'about'
     resource :appearance, only: [:show, :update], controller: 'appearance'
     resource :discovery, only: [:show, :update], controller: 'discovery'
+
+    namespace :administration do
+      resources :api_keys, only: [:index, :create, :update, :destroy]
+    end
   end
 
   resources :site_uploads, only: [:destroy]

@@ -1,4 +1,6 @@
-class Admin::Settings::ApiKeysController < ApplicationController
+class Admin::Settings::ApiKeysController < Admin::BaseController
+  before_action :require_admin!
+
   def index
     @api_keys = ApiKey.all
     @api_key = ApiKey.new
@@ -37,5 +39,4 @@ class Admin::Settings::ApiKeysController < ApplicationController
   def api_key_params
     params.require(:api_key).permit(:key, :description)
   end
-  
-end 
+end
