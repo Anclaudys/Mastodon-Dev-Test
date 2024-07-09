@@ -1,2 +1,5 @@
 %h1 Admin::Settings::ApiKeys#index
 %p Find me in app/views/admin/settings/api_keys/index.html.haml
+
+#api-keys{ data: { admin_component: 'ApiKeys', props: @api_keys.to_json } }
+%pre= @api_keys.to_json
