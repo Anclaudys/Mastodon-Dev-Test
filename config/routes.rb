@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   namespace :admin do
     namespace :settings do
       resources :api_keys, only: [:index, :create, :update, :destroy]
+      resource :administration, only: [:show, :update] 
     end
   end
 
