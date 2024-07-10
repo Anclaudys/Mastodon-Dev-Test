@@ -6,7 +6,7 @@ module Admin
   module Settings
     class AdministrationController < Admin::SettingsController
       def show
-        # No specific authorization needed for now - just render the page
+         render 'admin/settings/administration/show'
       end
     end
   end
