@@ -309,6 +309,24 @@ en:
       unpublish: Unpublish
       unpublished_msg: Announcement successfully unpublished!
       updated_msg: Announcement successfully updated!
+    api_keys:
+      title: "Manage API Keys"
+      create: "Create API Key"
+      update: "Update API Key"
+      destroy: "Delete API Key"
+      index:
+        title: "API Keys"
+        description: "Manage your API keys here."
+        new_key: "New API Key"
+        existing_keys: "Existing API Keys"
+      form:
+        key: "Key"
+        description: "Description"
+        submit: "Save"
+      messages:
+        created: "API key created successfully."
+        updated: "API key updated successfully."
+        deleted: "API key deleted successfully."
     critical_update_pending: Critical update pending
     custom_emojis:
       assign_category: Assign category
@@ -1633,24 +1651,6 @@ en:
     account: Account
     account_settings: Account settings
     aliases: Account aliases
-    api_keys:
-      title: "Manage API Keys"
-      create: "Create API Key"
-      update: "Update API Key"
-      destroy: "Delete API Key"
-      index:
-        title: "API Keys"
-        description: "Manage your API keys here."
-        new_key: "New API Key"
-        existing_keys: "Existing API Keys"
-      form:
-        key: "Key"
-        description: "Description"
-        submit: "Save"
-      messages:
-        created: "API key created successfully."
-        updated: "API key updated successfully."
-        deleted: "API key deleted successfully."
     appearance: Appearance
     authorized_apps: Authorized apps
     back: Back to Mastodon
