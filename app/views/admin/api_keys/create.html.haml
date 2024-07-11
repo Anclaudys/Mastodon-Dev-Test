@@ -1,3 +1,4 @@
+# app/views/admin/api_keys/create.html.haml
 %h1 API Keys
 
 %table
@@ -12,10 +13,10 @@
         %td= api_key.key
         %td= api_key.description
         %td
-          = link_to 'Edit', edit_admin_settings_api_key_path(api_key)
-          = link_to 'Delete', admin_settings_api_key_path(api_key), method: :delete, data: { confirm: 'Are you sure?' }
+          = link_to 'Edit', edit_admin_api_key_path(api_key)
+          = link_to 'Delete', admin_api_key_path(api_key), method: :delete, data: { confirm: 'Are you sure?' }
 
-= form_with(model: [ :admin, :settings, @api_key ], local: true) do |form|
+= form_with(model: [ :admin, @api_key ], local: true) do |form|
   - if @api_key.errors.any?
     #error_explanation
       %h2= "#{pluralize(@api_key.errors.count, 'error')} prohibited this API key from being saved:"

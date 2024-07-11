@@ -1,13 +1,17 @@
-class Admin::Settings::ApiKeysController < Admin::BaseController
+# app/controllers/admin/api_keys_controller.rb
+class Admin::ApiKeysController < Admin::BaseController
   before_action :require_admin
+  before_action :admin_set_api_key, only: [:update, :destroy]
 
   def index
     @api_keys = ApiKey.all
     @api_key = ApiKey.new
+    authorize @api_keys
   end
 
   def create
     @api_key = ApiKey.new(api_key_params)
+    authorize @api_key
     if @api_key.save
       redirect_to admin_api_keys_path, notice: "API key created"
     else
@@ -17,15 +21,17 @@ class Admin::Settings::ApiKeysController < Admin::BaseController
   end
 
   def update
-    if @api_key = ApiKey.find(params[:id])
+    authorize @api_key
+    if @api_key.update(api_key_params)
       redirect_to admin_api_keys_path, notice: "API key updated"
     else 
-      @api_keys = Api.all
+      @api_keys = ApiKey.all
       render :index
     end    
   end
 
   def destroy
+    authorize @api_key
     @api_key.destroy
     redirect_to admin_api_keys_path, notice: "API key deleted"
   end 

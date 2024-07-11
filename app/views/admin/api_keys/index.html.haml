@@ -1,14 +1,12 @@
-haml
-Copy code
 - content_for :page_title do
   = t('admin.settings.api_keys.title')
 
 %h2= t('admin.settings.api_keys.title')
 %p= t('admin.settings.api_keys.description')
 
-#api-keys{ data: { admin_component: 'ApiKeys', props: @api_keys.to_json } }
+#api_keys{ data: { admin_component: 'ApiKeys', props: @api_keys.to_json } }
 
-= simple_form_for @api_key, url: admin_settings_api_keys_path do |f|
+= simple_form_for @api_key, url: admin_api_keys_path do |f|
   = render 'shared/error_messages', object: @api_key
 
   .actions
