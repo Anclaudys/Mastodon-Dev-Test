@@ -1,69 +1,112 @@
-
-
-import React from 'react';
-import PropTypes from 'prop-types';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
-import ImmutablePureComponent from 'react-immutable-pure-component';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+import React, { useState, useEffect } from 'react';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Button } from '../../../mastodon/components/button';
 import TextInput from '../../../mastodon/components/TextInput';
+import { connect } from 'react-redux';
+import { fetchApiKeys, createApiKey, updateApiKey, deleteApiKey } from '../../../mastodon/actions/server';
 
 const messages = defineMessages({
+  label: { id: 'api_key_form.label', defaultMessage: 'API Key Name' },
   placeholder: { id: 'api_key_form.placeholder', defaultMessage: 'Enter API key name' },
-  submit: { id: 'api_key_form.submit', defaultMessage: 'Create AI Key' },
+  submit: { id: 'api_key_form.submit', defaultMessage: 'Create API Key' },
+  update: { id: 'api_key_form.update', defaultMessage: 'Update API Key' },
+  cancel: { id: 'api_key_form.cancel', defaultMessage: 'Cancel' },
+  edit: { id: 'api_key_form.edit', defaultMessage: 'Edit' },
+  delete: { id: 'api_key_form.delete', defaultMessage: 'Delete' },
+  noKeys: { id: 'api_keys.no_keys', defaultMessage: 'No API keys available.' },
 });
 
-class ApiKeyForm extends ImmutablePureComponent {
+const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiKey }) => {
+  const [value, setValue] = useState('');
+  const [editingKey, setEditingKey] = useState(null);
+  const intl = useIntl();
 
-  static propTypes = {
-    value: PropTypes.string.isRequired,
-    disabled: PropTypes.bool,
-    intl: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
+  useEffect(() => {
+    fetchApiKeys();
+  }, []);
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
   };
 
-  handleChange = (e) => {
-    this.props.onChange(e.target.value);
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.props.value);
-  }
+    if (editingKey) {
+      updateApiKey(editingKey.id, { name: value });
+      setEditingKey(null);
+    } else {
+      createApiKey(value);
+    }
+    setValue('');
+  };
 
-  render() {
-    const { value, disabled, intl } = this.props;
+  const handleEdit = (key) => {
+    setEditingKey(key);
+    setValue(key.name);
+  };
 
-    return (
-      <form onSubmit={this.handleSubmit}>
+  const handleDelete = (id) => {
+    deleteApiKey(id);
+  };
+
+  const renderSubmitButton = () => {
+    if (editingKey) {
+      return <FormattedMessage {...messages.update} />;
+    }
+    return <FormattedMessage {...messages.submit} />;
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
         <label>
-          <FormattedMessage id='api_key_form.label' defaultMessage='API Key Name' />
+          <FormattedMessage {...messages.label} />
           <TextInput
             value={value}
-            disabled={disabled}
             placeholder={intl.formatMessage(messages.placeholder)}
-            onChange={this.handleChange}
+            onChange={handleChange}
           />
         </label>
-        <Button disabled={disabled || !value} type='submit'>
-          <FormattedMessage {...messages.submit} />
+        <Button disabled={!value} type='submit'>
+          {renderSubmitButton()}
         </Button>
+        {editingKey && (
+          <Button onClick={() => { setEditingKey(null); setValue(''); }}>
+            <FormattedMessage {...messages.cancel} />
+          </Button>
+        )}
       </form>
-    );
-  }
 
-}
+      {Array.isArray(apiKeys) && apiKeys.length > 0 ? (
+        <ul>
+          {apiKeys.map(key => (
+            <li key={key.id}>
+              {key.name}
+              <Button onClick={() => handleEdit(key)}>
+                <FormattedMessage {...messages.edit} />
+              </Button>
+              <Button onClick={() => handleDelete(key.id)}>
+                <FormattedMessage {...messages.delete} />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p><FormattedMessage {...messages.noKeys} /></p>
+      )}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({
-  value: state.getIn(['api_keys', 'new', 'value']),
-  disabled: state.getIn(['api_keys', 'new', 'submitting']),
+  apiKeys: state.getIn(['server', 'apiKeys', 'items']),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  onChange: (value) => dispatch({ type: 'API_KEY_CHANGE', value }),
-  onSubmit: (value) => dispatch({ type: 'API_KEY_SUBMIT', value }),
-});
+const mapDispatchToProps = {
+  fetchApiKeys,
+  createApiKey,
+  updateApiKey,
+  deleteApiKey,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ApiKeyForm));
+export default connect(mapStateToProps, mapDispatchToProps)(ApiKeys);

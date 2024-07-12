@@ -18,6 +18,19 @@ export const SERVER_DOMAIN_BLOCKS_FETCH_REQUEST = 'SERVER_DOMAIN_BLOCKS_FETCH_RE
 export const SERVER_DOMAIN_BLOCKS_FETCH_SUCCESS = 'SERVER_DOMAIN_BLOCKS_FETCH_SUCCESS';
 export const SERVER_DOMAIN_BLOCKS_FETCH_FAIL    = 'SERVER_DOMAIN_BLOCKS_FETCH_FAIL';
 
+export const API_KEYS_FETCH_REQUEST = 'API_KEYS_FETCH_REQUEST';
+export const API_KEYS_FETCH_SUCCESS = 'API_KEYS_FETCH_SUCCESS';
+export const API_KEYS_FETCH_FAIL = 'API_KEYS_FETCH_FAIL';
+export const API_KEY_CREATE_REQUEST = 'API_KEY_CREATE_REQUEST';
+export const API_KEY_CREATE_SUCCESS = 'API_KEY_CREATE_SUCCESS';
+export const API_KEY_CREATE_FAIL = 'API_KEY_CREATE_FAIL';
+export const API_KEY_UPDATE_REQUEST = 'API_KEY_UPDATE_REQUEST';
+export const API_KEY_UPDATE_SUCCESS = 'API_KEY_UPDATE_SUCCESS';
+export const API_KEY_UPDATE_FAIL = 'API_KEY_UPDATE_FAIL';
+export const API_KEY_DELETE_REQUEST = 'API_KEY_DELETE_REQUEST';
+export const API_KEY_DELETE_SUCCESS = 'API_KEY_DELETE_SUCCESS';
+export const API_KEY_DELETE_FAIL = 'API_KEY_DELETE_FAIL';
+
 export const fetchServer = () => (dispatch, getState) => {
   if (getState().getIn(['server', 'server', 'isLoading'])) {
     return;
@@ -127,5 +140,105 @@ const fetchDomainBlocksSuccess = (isAvailable, blocks) => ({
 
 const fetchDomainBlocksFail = error => ({
   type: SERVER_DOMAIN_BLOCKS_FETCH_FAIL,
+  error,
+});
+
+export const fetchApiKeys = () => (dispatch, getState) => {
+  if (getState().getIn(['server', 'apiKeys', 'isLoading'])) {
+    return;
+  }
+
+  dispatch(fetchApiKeysRequest());
+
+  api(getState)
+    .get('/api/v1/apps')
+    .then(({ data }) => dispatch(fetchApiKeysSuccess(data)))
+    .catch(err => dispatch(fetchApiKeysFail(err)));
+};
+
+const fetchApiKeysRequest = () => ({
+  type: API_KEYS_FETCH_REQUEST,
+});
+
+const fetchApiKeysSuccess = apiKeys => ({
+  type: API_KEYS_FETCH_SUCCESS,
+  apiKeys,
+});
+
+const fetchApiKeysFail = error => ({
+  type: API_KEYS_FETCH_FAIL,
+  error,
+});
+
+// Create API Key
+export const createApiKey = (name, scopes) => (dispatch, getState) => {
+  dispatch(createApiKeyRequest());
+
+  api(getState)
+    .post('/api/v1/apps', { name, scopes })
+    .then(({ data }) => dispatch(createApiKeySuccess(data)))
+    .catch(err => dispatch(createApiKeyFail(err)));
+};
+
+const createApiKeyRequest = () => ({
+  type: API_KEY_CREATE_REQUEST,
+});
+
+const createApiKeySuccess = apiKey => ({
+  type: API_KEY_CREATE_SUCCESS,
+  apiKey,
+});
+
+const createApiKeyFail = error => ({
+  type: API_KEY_CREATE_FAIL,
+  error,
+});
+
+// Update API Key
+export const updateApiKey = (id, data) => (dispatch, getState) => {
+  dispatch(updateApiKeyRequest());
+
+  api(getState)
+    .put(`/api/v1/apps/${id}`, data)
+    .then(({ data }) => dispatch(updateApiKeySuccess(id, data)))
+    .catch(err => dispatch(updateApiKeyFail(err)));
+};
+
+const updateApiKeyRequest = () => ({
+  type: API_KEY_UPDATE_REQUEST,
+});
+
+const updateApiKeySuccess = (id, apiKey) => ({
+  type: API_KEY_UPDATE_SUCCESS,
+  id,
+  apiKey,
+});
+
+const updateApiKeyFail = error => ({
+  type: API_KEY_UPDATE_FAIL,
+  error,
+});
+
+// Delete API Key
+export const deleteApiKey = (id) => (dispatch, getState) => {
+  dispatch(deleteApiKeyRequest());
+
+  api(getState)
+    .delete(`/api/v1/apps/${id}`)
+    .then(() => dispatch(deleteApiKeySuccess(id)))
+    .catch(err => dispatch(deleteApiKeyFail(err)));
+};
+
+const deleteApiKeyRequest = () => ({
+  type: API_KEY_DELETE_REQUEST,
+});
+
+const deleteApiKeySuccess = id => ({
+  type: API_KEY_DELETE_SUCCESS,
+  id,
+});
+
+const deleteApiKeyFail = error => ({
+  type: API_KEY_DELETE_FAIL,
   error,
 });
