@@ -143,15 +143,14 @@ const fetchDomainBlocksFail = error => ({
   error,
 });
 
-export const fetchApiKeys = () => (dispatch, getState) => {
-  if (getState().getIn(['server', 'apiKeys', 'isLoading'])) {
-    return;
-  }
 
+// API KEYS ACTIONS
+
+export const fetchApiKeys = () => (dispatch, getState) => {
   dispatch(fetchApiKeysRequest());
 
   api(getState)
-    .get('/api/v1/apps')
+    .get('/admin/api_keys')
     .then(({ data }) => dispatch(fetchApiKeysSuccess(data)))
     .catch(err => dispatch(fetchApiKeysFail(err)));
 };
@@ -171,11 +170,11 @@ const fetchApiKeysFail = error => ({
 });
 
 // Create API Key
-export const createApiKey = (name, scopes) => (dispatch, getState) => {
+export const createApiKey = (name, otpKey, secretKey) => (dispatch, getState) => {
   dispatch(createApiKeyRequest());
 
   api(getState)
-    .post('/api/v1/apps', { name, scopes })
+    .post('/admin/api_keys', { api_key: { name, otp_key: otpKey, secret_key: secretKey } })
     .then(({ data }) => dispatch(createApiKeySuccess(data)))
     .catch(err => dispatch(createApiKeyFail(err)));
 };
@@ -199,7 +198,7 @@ export const updateApiKey = (id, data) => (dispatch, getState) => {
   dispatch(updateApiKeyRequest());
 
   api(getState)
-    .put(`/api/v1/apps/${id}`, data)
+    .put(`/admin/api_keys/${id}`, { api_key: data })
     .then(({ data }) => dispatch(updateApiKeySuccess(id, data)))
     .catch(err => dispatch(updateApiKeyFail(err)));
 };
@@ -224,7 +223,7 @@ export const deleteApiKey = (id) => (dispatch, getState) => {
   dispatch(deleteApiKeyRequest());
 
   api(getState)
-    .delete(`/api/v1/apps/${id}`)
+    .delete(`/admin/api_keys/${id}`)
     .then(() => dispatch(deleteApiKeySuccess(id)))
     .catch(err => dispatch(deleteApiKeyFail(err)));
 };

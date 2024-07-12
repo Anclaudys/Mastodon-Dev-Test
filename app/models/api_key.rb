@@ -7,6 +7,9 @@
 #  description :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  name        :string
+#  otp_key     :string
+#  secret_key  :string
 #
 class ApiKey < ApplicationRecord
 end

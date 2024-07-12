@@ -6,8 +6,12 @@ import { connect } from 'react-redux';
 import { fetchApiKeys, createApiKey, updateApiKey, deleteApiKey } from '../../../mastodon/actions/server';
 
 const messages = defineMessages({
-  label: { id: 'api_key_form.label', defaultMessage: 'API Key Name' },
-  placeholder: { id: 'api_key_form.placeholder', defaultMessage: 'Enter API key name' },
+  labelName: { id: 'api_key_form.label_name', defaultMessage: 'API Key Name' },
+  placeholderName: { id: 'api_key_form.placeholder_name', defaultMessage: 'Enter API key name' },
+  labelOtp: { id: 'api_key_form.label_otp', defaultMessage: 'OTP Key' },
+  placeholderOtp: { id: 'api_key_form.placeholder_otp', defaultMessage: 'Enter OTP key' },
+  labelSecret: { id: 'api_key_form.label_secret', defaultMessage: 'Secret Key' },
+  placeholderSecret: { id: 'api_key_form.placeholder_secret', defaultMessage: 'Enter secret key' },
   submit: { id: 'api_key_form.submit', defaultMessage: 'Create API Key' },
   update: { id: 'api_key_form.update', defaultMessage: 'Update API Key' },
   cancel: { id: 'api_key_form.cancel', defaultMessage: 'Cancel' },
@@ -17,7 +21,9 @@ const messages = defineMessages({
 });
 
 const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiKey }) => {
-  const [value, setValue] = useState('');
+  const [name, setName] = useState('');
+  const [otpKey, setOtpKey] = useState('');
+  const [secretKey, setSecretKey] = useState('');
   const [editingKey, setEditingKey] = useState(null);
   const intl = useIntl();
 
@@ -25,24 +31,28 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
     fetchApiKeys();
   }, []);
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+  const handleChangeName = (e) => setName(e.target.value);
+  const handleChangeOtp = (e) => setOtpKey(e.target.value);
+  const handleChangeSecret = (e) => setSecretKey(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editingKey) {
-      updateApiKey(editingKey.id, { name: value });
+      updateApiKey(editingKey.id, { name, otpKey, secretKey });
       setEditingKey(null);
     } else {
-      createApiKey(value);
+      createApiKey({ name, otpKey, secretKey });
     }
-    setValue('');
+    setName('');
+    setOtpKey('');
+    setSecretKey('');
   };
 
   const handleEdit = (key) => {
     setEditingKey(key);
-    setValue(key.name);
+    setName(key.name);
+    setOtpKey(key.otpKey || '');
+    setSecretKey(key.secretKey || '');
   };
 
   const handleDelete = (id) => {
@@ -60,18 +70,34 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
     <div>
       <form onSubmit={handleSubmit}>
         <label>
-          <FormattedMessage {...messages.label} />
+          <FormattedMessage {...messages.labelName} />
           <TextInput
-            value={value}
-            placeholder={intl.formatMessage(messages.placeholder)}
-            onChange={handleChange}
+            value={name}
+            placeholder={intl.formatMessage(messages.placeholderName)}
+            onChange={handleChangeName}
           />
         </label>
-        <Button disabled={!value} type='submit'>
+        <label>
+          <FormattedMessage {...messages.labelOtp} />
+          <TextInput
+            value={otpKey}
+            placeholder={intl.formatMessage(messages.placeholderOtp)}
+            onChange={handleChangeOtp}
+          />
+        </label>
+        <label>
+          <FormattedMessage {...messages.labelSecret} />
+          <TextInput
+            value={secretKey}
+            placeholder={intl.formatMessage(messages.placeholderSecret)}
+            onChange={handleChangeSecret}
+          />
+        </label>
+        <Button disabled={!name || !otpKey || !secretKey} type='submit'>
           {renderSubmitButton()}
         </Button>
         {editingKey && (
-          <Button onClick={() => { setEditingKey(null); setValue(''); }}>
+          <Button onClick={() => { setEditingKey(null); setName(''); setOtpKey(''); setSecretKey(''); }}>
             <FormattedMessage {...messages.cancel} />
           </Button>
         )}
@@ -97,7 +123,6 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
     </div>
   );
 };
-
 const mapStateToProps = (state) => ({
   apiKeys: state.getIn(['server', 'apiKeys', 'items']),
 });

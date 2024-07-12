@@ -43,6 +43,6 @@ class Admin::ApiKeysController < Admin::BaseController
   end
 
   def api_key_params
-    params.require(:api_key).permit(:key, :description)
+    params.require(:api_key).permit(:name, :otp_key, :secret_key)
   end
 end
