@@ -41,6 +41,12 @@ const initialState = ImmutableMap({
     isAvailable: true,
     items: ImmutableList(),
   }),
+  apiKeys: ImmutableMap({
+    isLoading: false,
+    isCreating: false,
+    isDeleting: false,
+    items: ImmutableList(),
+  }),
 });
 
 export default function server(state = initialState, action) {
@@ -80,8 +86,12 @@ export default function server(state = initialState, action) {
   case API_KEY_CREATE_REQUEST:
     return state.setIn(['apiKeys', 'isCreating'], true);
   case API_KEY_CREATE_SUCCESS:
-    return state.updateIn(['apiKeys', 'items'], items => items.push(fromJS(action.apiKey)))
-                .setIn(['apiKeys', 'isCreating'], false);
+    return state.updateIn(['apiKeys', 'items'], items => {
+      if (!ImmutableList.isList(items)) {
+        items = ImmutableList();
+      }
+      return items.push(fromJS(action.apiKey));
+    }).setIn(['apiKeys', 'isCreating'], false);
   case API_KEY_CREATE_FAIL:
     return state.setIn(['apiKeys', 'isCreating'], false);
 
