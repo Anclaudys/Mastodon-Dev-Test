@@ -1332,3 +1332,30 @@ code {
     }
   }
 }
+
+
+.api-key-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .input-group {
+    display: flex;
+    align-items: center;
+
+    .form-label {
+      min-width: 150px; // Adjust this width as needed
+      text-align: left;
+      padding-right: 1rem;
+    }
+
+    input {
+      flex: 1;
+    }
+  }
+
+  .small-button {
+    width: 20%;
+    height: 20%;
+  }
+}
