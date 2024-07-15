@@ -12,7 +12,7 @@ const messages = defineMessages({
   placeholderOtp: { id: 'api_key_form.placeholder_otp', defaultMessage: 'Enter OTP key' },
   labelSecret: { id: 'api_key_form.label_secret', defaultMessage: 'Secret Key' },
   placeholderSecret: { id: 'api_key_form.placeholder_secret', defaultMessage: 'Enter secret key' },
-  submit: { id: 'api_key_form.submit', defaultMessage: 'Create API Key' },
+  submit: { id: 'api_key_form.submit', defaultMessage: 'Submit' },
   update: { id: 'api_key_form.update', defaultMessage: 'Update API Key' },
   cancel: { id: 'api_key_form.cancel', defaultMessage: 'Cancel' },
   edit: { id: 'api_key_form.edit', defaultMessage: 'Edit' },
@@ -67,38 +67,39 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="api-key-form">
-        <div className="input-group">
-          <label className="form-label">
-            <FormattedMessage {...messages.labelName} />&nbsp;
-          </label>
-          <TextInput
-            value={name}
-            placeholder={intl.formatMessage(messages.placeholderName)}
-            onChange={handleChangeName}
-          />
-        </div>
-        <div className="input-group">
-          <label className="form-label">
-            <FormattedMessage {...messages.labelOtp} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </label>
-          <TextInput
-            value={otpSecret}
-            placeholder={intl.formatMessage(messages.placeholderOtp)}
-            onChange={handleChangeOtp}
-          />
-        </div>
-        <div className="input-group">
-          <label className="form-label">
-            <FormattedMessage {...messages.labelSecret} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </label>
-          <TextInput
-            value={secretKey}
-            placeholder={intl.formatMessage(messages.placeholderSecret)}
-            onChange={handleChangeSecret}
-          />
-        </div>
+  <div>
+    <form onSubmit={handleSubmit} className="api-key-form">
+      <div className="input-group">
+        <label className="form-label">
+          <FormattedMessage {...messages.labelName} />&nbsp;
+        </label>
+        <TextInput
+          value={name}
+          placeholder={intl.formatMessage(messages.placeholderName)}
+          onChange={handleChangeName}
+        />
+      </div>
+      <div className="input-group">
+        <label className="form-label">
+          <FormattedMessage {...messages.labelOtp} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </label>
+        <TextInput
+          value={otpSecret}
+          placeholder={intl.formatMessage(messages.placeholderOtp)}
+          onChange={handleChangeOtp}
+        />
+      </div>
+      <div className="input-group">
+        <label className="form-label">
+          <FormattedMessage {...messages.labelSecret} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </label>
+        <TextInput
+          value={secretKey}
+          placeholder={intl.formatMessage(messages.placeholderSecret)}
+          onChange={handleChangeSecret}
+        />
+      </div>
+      <div className="button-container">
         <Button 
           disabled={!name || !otpSecret || !secretKey} 
           type='submit'
@@ -114,26 +115,28 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
             <FormattedMessage {...messages.cancel} />
           </Button>
         )}
-      </form>
+      </div>
+    </form>
 
-      {Array.isArray(apiKeys) && apiKeys.length > 0 ? (
-        <ul>
-          {apiKeys.map(key => (
-            <li key={key.id}>
-              {key.name}
-              <Button onClick={() => handleEdit(key)}>
-                <FormattedMessage {...messages.edit} />
-              </Button>
-              <Button onClick={() => handleDelete(key.id)}>
-                <FormattedMessage {...messages.delete} />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p><FormattedMessage {...messages.noKeys} /></p>
-      )}
-    </div>
+    {Array.isArray(apiKeys) && apiKeys.length > 0 ? (
+      <ul>
+        {apiKeys.map(key => (
+          <li key={key.id}>
+            {key.name}
+            <Button onClick={() => handleEdit(key)}>
+              <FormattedMessage {...messages.edit} />
+            </Button>
+            <Button onClick={() => handleDelete(key.id)}>
+              <FormattedMessage {...messages.delete} />
+            </Button>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p><FormattedMessage {...messages.noKeys} /></p>
+    )}
+  </div>
+
   );
 };
 const mapStateToProps = (state) => ({
