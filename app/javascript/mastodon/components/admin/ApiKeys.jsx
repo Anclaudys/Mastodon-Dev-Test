@@ -8,7 +8,7 @@ import { fetchApiKeys, createApiKey, updateApiKey, deleteApiKey } from '../../..
 const messages = defineMessages({
   labelName: { id: 'api_key_form.label_name', defaultMessage: 'API Key Name' },
   placeholderName: { id: 'api_key_form.placeholder_name', defaultMessage: 'Enter API key name' },
-  labelOtp: { id: 'api_key_form.label_otp', defaultMessage: 'OTP Key' },
+  labelOtp: { id: 'api_key_form.label_otp', defaultMessage: 'OTP Secret' },
   placeholderOtp: { id: 'api_key_form.placeholder_otp', defaultMessage: 'Enter OTP key' },
   labelSecret: { id: 'api_key_form.label_secret', defaultMessage: 'Secret Key' },
   placeholderSecret: { id: 'api_key_form.placeholder_secret', defaultMessage: 'Enter secret key' },
@@ -22,7 +22,7 @@ const messages = defineMessages({
 
 const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiKey }) => {
   const [name, setName] = useState('');
-  const [otpKey, setOtpKey] = useState('');
+  const [otpSecret, setOtpSecret] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [editingKey, setEditingKey] = useState(null);
   const intl = useIntl();
@@ -32,26 +32,26 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
   }, []);
 
   const handleChangeName = (e) => setName(e.target.value);
-  const handleChangeOtp = (e) => setOtpKey(e.target.value);
+  const handleChangeOtp = (e) => setOtpSecret(e.target.value);
   const handleChangeSecret = (e) => setSecretKey(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editingKey) {
-      updateApiKey(editingKey.id, { name, otpKey, secretKey });
+      updateApiKey(editingKey.id, { name, otpSecret, secretKey });
       setEditingKey(null);
     } else {
-      createApiKey({ name, otpKey, secretKey });
+      createApiKey({ name, otpSecret, secretKey });
     }
     setName('');
-    setOtpKey('');
+    setOtpSecret('');
     setSecretKey('');
   };
 
   const handleEdit = (key) => {
     setEditingKey(key);
     setName(key.name);
-    setOtpKey(key.otpKey || '');
+    setOtpSecret(key.otpSecret || '');
     setSecretKey(key.secretKey || '');
   };
 
@@ -84,7 +84,7 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
             <FormattedMessage {...messages.labelOtp} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </label>
           <TextInput
-            value={otpKey}
+            value={otpSecret}
             placeholder={intl.formatMessage(messages.placeholderOtp)}
             onChange={handleChangeOtp}
           />
@@ -100,7 +100,7 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
           />
         </div>
         <Button 
-          disabled={!name || !otpKey || !secretKey} 
+          disabled={!name || !otpSecret || !secretKey} 
           type='submit'
           className="small-button"
         >
@@ -108,7 +108,7 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
         </Button>
         {editingKey && (
           <Button 
-            onClick={() => { setEditingKey(null); setName(''); setOtpKey(''); setSecretKey(''); }}
+            onClick={() => { setEditingKey(null); setName(''); setOtpSecret(''); setSecretKey(''); }}
             className="small-button"
           >
             <FormattedMessage {...messages.cancel} />
