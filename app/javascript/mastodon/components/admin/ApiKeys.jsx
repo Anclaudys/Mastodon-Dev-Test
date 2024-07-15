@@ -68,36 +68,49 @@ const ApiKeys = ({ apiKeys, fetchApiKeys, createApiKey, updateApiKey, deleteApiK
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <FormattedMessage {...messages.labelName} />
+      <form onSubmit={handleSubmit} className="api-key-form">
+        <div className="input-group">
+          <label className="form-label">
+            <FormattedMessage {...messages.labelName} />&nbsp;
+          </label>
           <TextInput
             value={name}
             placeholder={intl.formatMessage(messages.placeholderName)}
             onChange={handleChangeName}
           />
-        </label>
-        <label>
-          <FormattedMessage {...messages.labelOtp} />
+        </div>
+        <div className="input-group">
+          <label className="form-label">
+            <FormattedMessage {...messages.labelOtp} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </label>
           <TextInput
             value={otpKey}
             placeholder={intl.formatMessage(messages.placeholderOtp)}
             onChange={handleChangeOtp}
           />
-        </label>
-        <label>
-          <FormattedMessage {...messages.labelSecret} />
+        </div>
+        <div className="input-group">
+          <label className="form-label">
+            <FormattedMessage {...messages.labelSecret} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </label>
           <TextInput
             value={secretKey}
             placeholder={intl.formatMessage(messages.placeholderSecret)}
             onChange={handleChangeSecret}
           />
-        </label>
-        <Button disabled={!name || !otpKey || !secretKey} type='submit'>
+        </div>
+        <Button 
+          disabled={!name || !otpKey || !secretKey} 
+          type='submit'
+          className="small-button"
+        >
           {renderSubmitButton()}
         </Button>
         {editingKey && (
-          <Button onClick={() => { setEditingKey(null); setName(''); setOtpKey(''); setSecretKey(''); }}>
+          <Button 
+            onClick={() => { setEditingKey(null); setName(''); setOtpKey(''); setSecretKey(''); }}
+            className="small-button"
+          >
             <FormattedMessage {...messages.cancel} />
           </Button>
         )}
