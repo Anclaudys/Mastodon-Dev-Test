@@ -8,8 +8,11 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  name        :string
-#  otp_key     :string
+#  otp_secret  :string
 #  secret_key  :string
 #
 class ApiKey < ApplicationRecord
+  validates :name, presence: true
+  validates :otp_secret, presence: true
+  validates :secret_key, presence: true
 end
