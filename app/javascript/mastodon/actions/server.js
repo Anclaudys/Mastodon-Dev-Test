@@ -170,11 +170,11 @@ const fetchApiKeysFail = error => ({
 });
 
 // Create API Key
-export const createApiKey = (name, otpKey, secretKey) => (dispatch, getState) => {
+export const createApiKey = (name, otpSecret, secretKey) => (dispatch, getState) => {
   dispatch(createApiKeyRequest());
 
   api(getState)
-    .post('/admin/api_keys', { api_key: { name, otp_key: otpKey, secret_key: secretKey } })
+    .post('/admin/api_keys', { api_key: { name, otp_secret: otpSecret, secret_key: secretKey } })
     .then(({ data }) => dispatch(createApiKeySuccess(data)))
     .catch(err => dispatch(createApiKeyFail(err)));
 };
