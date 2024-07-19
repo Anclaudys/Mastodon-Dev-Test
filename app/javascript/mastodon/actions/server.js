@@ -148,11 +148,17 @@ const fetchDomainBlocksFail = error => ({
 
 export const fetchApiKeys = () => (dispatch, getState) => {
   dispatch(fetchApiKeysRequest());
-
-  api(getState)
+  return api(getState)
     .get('/admin/api_keys')
-    .then(({ data }) => dispatch(fetchApiKeysSuccess(data)))
-    .catch(err => dispatch(fetchApiKeysFail(err)));
+    .then(({ data }) => {
+      dispatch(fetchApiKeysSuccess(data));
+      return data;
+    })
+    .catch(err => {
+      console.error('Error fetching API keys:', err);
+      dispatch(fetchApiKeysFail(err));
+      throw err;
+    });
 };
 
 const fetchApiKeysRequest = () => ({
@@ -169,18 +175,30 @@ const fetchApiKeysFail = error => ({
   error,
 });
 
-// Create API Key
-export const createApiKey = ({name, otpSecret, secretKey}) => (dispatch, getState) => {
+export const createApiKey = ({ serviceName, privateKey }) => (dispatch, getState) => {
   dispatch(createApiKeyRequest());
   
-  const payload = { api_key: { name, otp_secret: otpSecret, secret_key: secretKey } };
-  console.log("Payload being sent:", payload);
-
-  api(getState)
-    .post('/admin/api_keys', payload)
-    .then(({ data }) => dispatch(createApiKeySuccess(data)))
-    .catch(err => dispatch(createApiKeyFail(err)));
+  const payload = { api_key: { service_name: serviceName, private_key: privateKey } };
+  return api(getState)
+    .post('/admin/api_keys', payload, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(({ data }) => {
+      console.log("Response received in createApiKey:", data);
+      dispatch(createApiKeySuccess(data.api_key));
+      return data;
+    })
+    .catch(err => {
+      console.error("Error in createApiKey:", err);
+      dispatch(createApiKeyFail(err));
+      throw err;
+    });
 };
+
+// Similarly for updateApiKey
 
 const createApiKeyRequest = () => ({
   type: API_KEY_CREATE_REQUEST,
@@ -196,14 +214,21 @@ const createApiKeyFail = error => ({
   error,
 });
 
-// Update API Key
-export const updateApiKey = (id, data) => (dispatch, getState) => {
+export const updateApiKey = (id, { serviceName, privateKey }) => (dispatch, getState) => {
   dispatch(updateApiKeyRequest());
-
-  api(getState)
-    .put(`/admin/api_keys/${id}`, { api_key: data })
-    .then(({ data }) => dispatch(updateApiKeySuccess(id, data)))
-    .catch(err => dispatch(updateApiKeyFail(err)));
+  const payload = { api_key: { service_name: serviceName, private_key: privateKey } };
+  return api(getState)
+    .put(`/admin/api_keys/${id}`, payload)
+    .then(({ data }) => {
+      console.log("Response from update API key:", data);
+      dispatch(updateApiKeySuccess(id, data.api_key));
+      return data; // This includes both api_key and key_set
+    })
+    .catch(err => {
+      console.error('Error updating API key:', err);
+      dispatch(updateApiKeyFail(err));
+      throw err;
+    });
 };
 
 const updateApiKeyRequest = () => ({
@@ -221,14 +246,19 @@ const updateApiKeyFail = error => ({
   error,
 });
 
-// Delete API Key
 export const deleteApiKey = (id) => (dispatch, getState) => {
   dispatch(deleteApiKeyRequest());
-
-  api(getState)
+  return api(getState)
     .delete(`/admin/api_keys/${id}`)
-    .then(() => dispatch(deleteApiKeySuccess(id)))
-    .catch(err => dispatch(deleteApiKeyFail(err)));
+    .then(() => {
+      dispatch(deleteApiKeySuccess(id));
+      return { success: true };
+    })
+    .catch(err => {
+      console.error('Error deleting API key:', err);
+      dispatch(deleteApiKeyFail(err));
+      throw err;
+    });
 };
 
 const deleteApiKeyRequest = () => ({
