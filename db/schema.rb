@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_222821) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_19_140910) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -250,13 +250,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_222821) do
   end
 
   create_table "api_keys", force: :cascade do |t|
-    t.string "key"
-    t.text "description"
+    t.string "service_name"
+    t.string "private_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
-    t.string "otp_secret"
-    t.string "secret_key"
   end
 
   create_table "appeals", force: :cascade do |t|
