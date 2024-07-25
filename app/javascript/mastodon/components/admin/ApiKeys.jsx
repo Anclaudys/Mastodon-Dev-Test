@@ -10,14 +10,14 @@ const messages = defineMessages({
   placeholderServiceName: { id: 'api_key_form.placeholder_service_name', defaultMessage: 'Enter service name' },
   labelPrivateKey: { id: 'api_key_form.label_private_key', defaultMessage: 'Private Key' },
   placeholderPrivateKey: { id: 'api_key_form.placeholder_private_key', defaultMessage: 'Enter private key' },
-  submit: { id: 'api_key_form.submit', defaultMessage: 'Submit' },
+  submit: { id: 'api_key_form.submit', defaultMessage: 'Save' },
   update: { id: 'api_key_form.update', defaultMessage: 'Update API Key' },
   cancel: { id: 'api_key_form.cancel', defaultMessage: 'Cancel' },
   edit: { id: 'api_key_form.edit', defaultMessage: 'Edit' },
   delete: { id: 'api_key_form.delete', defaultMessage: 'Delete' },
-  noKeys: { id: 'api_keys.no_keys', defaultMessage: 'No private key available.' },
-  keySetSuccess: { id: 'api_keys.key_set_success', defaultMessage: 'Private Key Successfully Set' },
-  keySetFail: { id: 'api_keys.key_set_fail', defaultMessage: 'Failed to set private key' },
+  noKeys: { id: 'api_keys.no_keys', defaultMessage: 'Please enter a private key' },
+  keySetSuccess: { id: 'api_keys.key_set_success', defaultMessage: 'Private Key Successfully Saved' },
+  keySetFail: { id: 'api_keys.key_set_fail', defaultMessage: 'Failed to save private key' },
   loading: { id: 'api_keys.loading', defaultMessage: 'Loading...' },
 });
 
